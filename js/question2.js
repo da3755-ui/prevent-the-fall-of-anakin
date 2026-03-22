@@ -34,10 +34,6 @@ class Question2{
     
     }
 
-    updatePosition(){
-  this.option1Button.position(width*0.25 - 250, height/1.5);
-  this.option2Button.position(width*0.75 - 250, height/1.5);
-}
 
     display(){
         fill('white')

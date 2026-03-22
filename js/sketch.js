@@ -1,3 +1,4 @@
+//defining all the variables that will be used
 let soundtrack; 
 let startPage; 
 let buttonInstruction; 
@@ -27,10 +28,11 @@ let deathEndingImage;
 let help = "Press f (possibly twice) to toggle fullscreen";
 
 function preload(){
-  //load start oage's sound
+  //load start page's sound
   soundtrack=loadSound("sounds/Grievous Speaks to Lord Sidious.mp3");
   //load start page's image
   startPage=loadImage("images/Start Page.png");
+  //load each question/option's background image
   node1Image=loadImage("images/coruscantApartment.png");
   node2Image=loadImage("images/theCouncil.png");
   node3Image=loadImage("images/Naboo.png");
@@ -41,7 +43,7 @@ function preload(){
   sithEndingImage=loadImage("images/DarthVader.jpg");
   happyEndingImage=loadImage("images/Tranquil lakeside.png");
   deathEndingImage=loadImage("images/deathEnd.png");
-  //load start button font
+  //load fonts
   startFont=loadFont("fonts/Starjhol.ttf");
   titleFont=loadFont("fonts/Oxanium-Bold.ttf");
 }
@@ -56,36 +58,31 @@ function toggleFullScreen(){
   let fs=fullscreen();//get the current state
   fullscreen(!fs);//flip it
 }
+
+//allow the page to resize itself according to the window's page
 function windowResized(){
   print("resized to"+windowWidth+","+windowHeight);
   resizeCanvas(windowWidth, windowHeight);
 
-    buttonInstruction.position(width/2 - 300, height/1.2);
-    buttonTryAgain.position(width/2 - 300, height-300);
-    buttonStart.position(width/2 - 300, height-150);
+  //i placed the buttons' position here so their position changes as well with respect to the window size
+    buttonInstruction.position(width/2 - 180, height/1.13 );
+    buttonTryAgain.position(width/2 - 300, height-200);
+    buttonStart.position(width/2 - 180, height/1.13);
     instructions.position(0,0);
     instructions.size(width,height);
-
-    firstQuestion[0].updatePosition();
-    secondQuestion[0].updatePosition();
-    thirdQuestion[0].updatePosition();
-    fourthQuestion[0].updatePosition();
-    fifthQuestion[0].updatePosition();
-    sixthQuestion[0].updatePosition();
-    seventhQuestion[0].updatePosition();
 }
 function setup(){
   createCanvas(windowWidth, windowHeight);
-  noSmooth();//to reduce potential blur
   print(help);
-
+  
+  //creating the instruction video that will be played 
   instructions=createVideo('images/InstructionsPage (1).mp4');
+  //hiding it until it is called in the instructions function
   instructions.hide();
 
 //------create instructions button------
 buttonInstruction=createButton("INSTRUCTIONS");
-buttonInstruction.size(600, 120);
-buttonInstruction.position(width/2 - 300, height/1.2);
+buttonInstruction.size(360, 70);
 buttonInstruction.style('font-size', '20px');
 buttonInstruction.style('background-color', 'black');
 buttonInstruction.style('color', 'white');
@@ -94,27 +91,34 @@ buttonInstruction.style('font-family', 'startFont');
 buttonInstruction.style('text-align', 'center');
 buttonInstruction.mousePressed(transitionToInstructions);//trigger the insructions function when the button is pressed
 buttonInstruction.hide();
+buttonInstruction.position(width/2 - 180, height/1.13);
 
+//creating the restart button
 buttonTryAgain=createButton("RESTART");
 buttonTryAgain.size(600, 120);
 buttonTryAgain.style('font-size', '20px');
 buttonTryAgain.style('background-color', 'black');
 buttonTryAgain.style('color', 'white');
 buttonTryAgain.style('border', 'none');
+buttonTryAgain.style('font-family', 'startFont');
 buttonTryAgain.style('text-align', 'center');
 buttonTryAgain.hide();
+buttonTryAgain.position(width/2 - 300, height-200);
 
+//creating the start button
 buttonStart=createButton("START");
-buttonStart.size(600, 120);
+buttonStart.size(360, 70);
 buttonStart.style('font-size', '20px');
 buttonStart.style('background-color', 'black');
 buttonStart.style('color', 'white');
 buttonStart.style('border', 'none');
+buttonStart.style('font-family', 'startFont');
 buttonStart.style('text-align', 'center');
-buttonStart.position(width/2 - 300, height-150);
-buttonStart.mousePressed(startGame);
-buttonStart.hide()
+buttonStart.mousePressed(startGame); //call the function to start the game once it is pressed
+buttonStart.hide() //hide the button until we can call it in the instructions function
+buttonStart.position(width/2 - 180, height/1.13);
 
+//customize the constructors made in the classes and accessing them
 firstQuestion[0]=new Question1('Anakin saw Padme die in his dream, and he fears it may come true. \nPadme suggests speaking to Obi-Wan. \nWhat should he do?', 'Tell Obi-Wan, but risk his marriage and possibility of being a Jedi', 'Secretly investigate on his own, but risk not finding answers');
 secondQuestion[0]=new Question2("After confiding in Obi-Wan, Obi-Wan grants him two choices", "Leave the Order completely.", "Let go of Padme \nwhile they are taken care of away from him.");
 thirdQuestion[0]=new Question3('Anakin leaves the Order to live in Naboo with Padme and raise their children\n but receives an unexpected visitor: the Chancellor \nwho offers him help with his dreams', 'Refuse his help, but risk losing Padme', 'Accept his offer and train under the wing of the Chancellor');
@@ -122,17 +126,17 @@ fourthQuestion[0]=new Question4('The Council does not trust the Chancellor and s
 fifthQuestion[0]=new Question5("Anakin  informs Master Windu that the Chancellor is a Sith Lord\nMaster Windu immediately finds the Chancellor, ready to kill him off\nShould Anakin","Help Master Windu kill Palpatine.", "Stop Master Windu to stop Padme's death.")
 sixthQuestion[0]=new Question6("Anakin refused to spy on the Chancellor \nThe Chancellor reveals to Anakin that he can help him stop Padme's death\n...using the Dark Side\nAnakin is now certain that the Chancellor is a Sith Lord\n Should he","Inform the council, get their trust, but risk losing Padme","Keep it a secret and protect Padme")
 seventhQuestion[0]=new Question7("Anakin agreed to spy on the Chancellor.\nThe Chancellor reveals to Anakin that he can help him stop Padme's death\n...using the Dark Side\nAnakin is now certain that the Chancellor is a Sith Lord\n Should he","Inform the council, get their trust, but risk losing Padme","Keep it a secret and protect Padme")
-soundtrack.play();
+soundtrack.play();//play the sound in the background (placed in setup so it doesn't keep runing over itself which was a problem i faced when i put it in draw)
 
 }
 
 function draw(){
-//creating the start page
+//creating the conditions that will allow to switch between nodes
  if (gameState === 'start') {
     drawStartScreen();
   } else if(gameState==='instructions'){
     drawInstructions();
-  } else   if (gameState==='node1'){//what happens in the first node
+  } else   if (gameState==='node1'){//what happens in the first node and so on
     drawNode1();
   } else if (gameState==='node2'){
     drawNode2();
@@ -155,6 +159,7 @@ function draw(){
   }
 }
 
+//creating and customizing the start screen
 function drawStartScreen(){
   background('black');
 
@@ -177,20 +182,20 @@ function drawStartScreen(){
   noStroke();
   text("Press f (possibly twice) to toggle fullscreen", width/2, height/1.25);
 
-  buttonInstruction.show();
+  buttonInstruction.show();//show the instructions button
 }
 
-function transitionToInstructions(){
-gameState='instructions';
+function transitionToInstructions(){//created transition functions to make it easier to shift game states, rather than shifting game states within each node's functions 
+gameState='instructions'; //change the game state to instructions
 }
 
+//customizing the instructions page
 function drawInstructions(){
   background('black');
   buttonInstruction.hide();
   buttonStart.show();
-  buttonStart.position(width/2 - 300, height - 150);
 
-  soundtrack.stop();
+  soundtrack.stop();//mute the background audio of the game so it doesn't overlap with the instructions audio
 
   instructions.show();
   instructions.position(0,0);
@@ -198,57 +203,39 @@ function drawInstructions(){
   instructions.play();
 
 }
-function skipInstructions(){
-  //what happens after you click the skip button. 
-  //allows the instruction video to stop and go away
-  // background(255,0,0);
-  // instructions.stop();
-  // instructions.hide();
-  //what happens after you click the start button.
-  //makes the instruction video stop and hide
-  instructions.stop();
-  instructions.hide();
-  buttonStart.hide();
-  buttonSkip.hide();
-  buttonInstruction.hide();
-
-  gameState = 'node1';//changes the game state to the first node/choice to make
-  soundtrack.play();
-
-  firstQuestion[0].show(); 
-  firstQuestion[0].option1Button.mousePressed(transitionToNode2);//chatGpt told me to create a transition function. i originally had this statement in my node1 function but chatgpt told me to move it. also chatgpt told  me that to access my buttons i had to put my array name first  
-  firstQuestion[0].option2Button.mousePressed(transitionToNode4);
-  buttonSkip.hide();
-}
 
 function startGame(){
   //what happens after you click the start button.
   //makes the instruction video stop and hide
   buttonStart.hide();
-  // buttonSkip.hide();
   buttonInstruction.hide();
   instructions.stop();
   instructions.hide();
   
 
   gameState = 'node1';//changes the game state to the first node/choice to make
-  soundtrack.play();
+  soundtrack.play(); //plays the background audio again
 
+  //show the first question
   firstQuestion[0].show(); 
-  firstQuestion[0].option1Button.mousePressed(transitionToNode2);//chatGpt told me to create a transition function. i originally had this statement in my node1 function but chatgpt told me to move it. also chatgpt told  me that to access my buttons i had to put my array name first  
-  firstQuestion[0].option2Button.mousePressed(transitionToNode4);
 }
 
 function drawNode1(){
     image(node1Image, 0,0,width,height); 
     firstQuestion[0].display();//display the question
-    firstQuestion[0].show();//display the choice buttons   
+    firstQuestion[0].show();//display the choice buttons  
+      //calls the transition function once you click a button
+    firstQuestion[0].option1Button.mousePressed(transitionToNode2);
+     //chatGpt told me to create a transition function. i originally had this statement in my node1 function but chatgpt told me to move it. also chatgpt told  me that to access my buttons i had to put my array name first  
+    firstQuestion[0].option2Button.mousePressed(transitionToNode4); 
 }
 
 function transitionToNode2(){
   gameState='node2';//apparently there is a difference between === and = which i am not sure i understand but i made chatgpt explain it to me
   secondQuestion[0].show(); 
 }
+
+//------------REPEAT THE SAME PATTERN: DRAW NODE ---> GO TO TRANSITION FUNCTION ONCE BUTTON PRESSED ---> CHANGE GAME STATE ---> DRAW NODE
 
 function drawNode2(){
   firstQuestion[0].hide();
@@ -283,9 +270,8 @@ function drawHappyEnding(){
   thirdQuestion[0].hide();
   textSize(42);
   fill('black');
-  text("ENDING\n Anakin now live happily in Naboo with Padme and their children \nwhile instability is still on the rise in the galaxy...\n \n \n \n \n \nWould you like to try again?", width/2, height/3);
+  text("ENDING\n Anakin now live happily in Naboo with Padme and their children \nwhile instability is still on the rise in the galaxy...\n \nWould you like to try again?", width/2, height/5);
   buttonTryAgain.show();
-  buttonTryAgain.position(width/2 - 300, height-300);
   buttonTryAgain.mousePressed(transitionToRestart);
 }
 
@@ -362,10 +348,10 @@ function drawSithEnding(){
   textSize(42);
   text("ENDING\n You could not prevent Anakin from turning to the Dark Side...\n \nWould you like to try again?", width/2, height/5);
   buttonTryAgain.show();
-  buttonTryAgain.position(width/2 - 300, height-300);
   buttonTryAgain.mousePressed(transitionToRestart);
 }
 
+//reset the game back to the start game state, successfully restarting the game
 function transitionToRestart(){
   buttonTryAgain.hide();
   gameState='start';
@@ -382,6 +368,5 @@ function drawDeathEnding(){
   fill('black');
   text(" \nENDING\n Anakin and Master Windu defeated the Chancellor\n... at a cost \nAnakin died while fighting alongside Master Windu\n \nWould you like to try again?", width/2, height/5);
   buttonTryAgain.show();
-  buttonTryAgain.position(width/2 - 300, height-300);
   buttonTryAgain.mousePressed(transitionToRestart);
 }
